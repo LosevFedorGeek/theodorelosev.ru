@@ -309,13 +309,13 @@ const translations = {
       "Portfolio für eine UI/UX-Designerin mit 20 Jahren Erfahrung. Klare Schweizer Typografie und schnelle Ladezeiten.",
     proj_2_name: "VIKA.ART : 3D Cyber Art",
     proj_2_desc:
-      "Futuristische Promo-Landingpage für ein 3D-Nailart-Studio mit Cyberpunk-Ästhetik und digitaler Preisliste.",
+      "Futuristische Promo-Landingpage для студии эксклюзивного маникюра. Сложные 3D-формы, стилистика жидкого металла, неоновые акценты и конверсионный прайс-лист.",
     proj_3_name: "Stroy-Alliance",
     proj_3_desc:
-      "Unternehmensportal für eine Premium-Immobiliengruppe. Zero Block Architektur, elegantes Dark-Design und Leads.",
+      "Корпоративный портал для девелоперской компании премиум-сегмента. Строгий дизайн в глубоких темных тонах, блочная верстка Zero Block и адаптив.",
     proj_4_name: "Monte-Cristo RPG",
     proj_4_desc:
-      "2D Top-Down RPG auf Basis von Unity 6. C# Gameplay-Architektur, NPC-KI und Inventarsystem.",
+      "Дипломный проект. Полноценная 2D top-down 16-bit RPG на Unity 6. Архитектура игровых циклов на C#, инвентарь, искусственный интеллект NPC и анимации.",
     calc_title: "Kalkulator",
     calc_subtitle: "Kosten- und Zeitaufwand für Ihr Digitalprojekt.",
     calc_label_1: "1. Produktkategorie:",
