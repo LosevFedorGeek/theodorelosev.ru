@@ -312,10 +312,10 @@ const translations = {
       "Futuristische Promo-Landingpage für ein 3D-Nailart-Studio mit Cyberpunk-Ästhetik und digitaler Preisliste.",
     proj_3_name: "Stroy-Alliance",
     proj_3_desc:
-      "Unternehmensportal для девелоперской компании премиум-сегмента. Строгий дизайн в глубоких темных тонах, блочная верстка Zero Block и адаптив.",
+      "Unternehmensportal für eine Premium-Immobiliengruppe. Zero Block Architektur, elegantes Dark-Design und Leads.",
     proj_4_name: "Monte-Cristo RPG",
     proj_4_desc:
-      "Дипломный проект. Полноценная 2D top-down 16-bit RPG на Unity 6. Архитектура игровых циклов на C#, инвентарь, искусственный интеллект NPC и анимации.",
+      "2D Top-Down RPG auf Basis von Unity 6. C# Gameplay-Architektur, NPC-KI und Inventarsystem.",
     calc_title: "Kalkulator",
     calc_subtitle: "Kosten- und Zeitaufwand für Ihr Digitalprojekt.",
     calc_label_1: "1. Produktkategorie:",
@@ -969,6 +969,7 @@ function initContactForm() {
   const contactInput = document.getElementById("userContact");
   const nameError = document.getElementById("nameError");
   const contactError = document.getElementById("contactError");
+  const keyInput = document.getElementById("web3formsKey");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -1004,12 +1005,19 @@ function initContactForm() {
 
     if (!isValid) return;
 
+    if (keyInput) {
+      keyInput.value = keyInput.value.trim();
+    }
+
     submitBtn.classList.add("loading");
     submitBtn.disabled = true;
 
     try {
       const formData = new FormData(form);
-      const response = await fetch("https://api.web3forms.com/submit", {
+      const actionUrl =
+        form.getAttribute("action") || "https://api.web3forms.com/submit";
+
+      const response = await fetch(actionUrl, {
         method: "POST",
         body: formData,
         headers: { Accept: "application/json" },
@@ -1017,17 +1025,22 @@ function initContactForm() {
 
       const data = await response.json();
 
-      if (response.ok && data.success) {
+      if (response.ok && (data.success || data.status === "success")) {
         formStatus.classList.add("success");
         formStatus.textContent =
           currentLang === "en"
-            ? "✓ Message sent successfully! I will contact you shortly."
+            ? "Message sent successfully! I will contact you shortly."
             : currentLang === "de"
-              ? "✓ Nachricht erfolgreich gesendet! Ich melde mich in Kürze."
-              : "✓ Заявка успешно отправлена! Я свяжусь с вами в ближайшее время.";
+              ? "Nachricht erfolgreich gesendet! Ich melde mich in Kürze."
+              : "Заявка успешно отправлена! Я свяжусь с вами в течение 15 минут.";
         form.reset();
       } else {
-        throw new Error(data.message || "Ошибка отправки");
+        throw new Error(
+          data.message ||
+            (currentLang === "en"
+              ? "Transmission error. Please write directly via Telegram @lonelyauthor"
+              : "Ошибка шлюза. Пожалуйста, напишите напрямую в Telegram @lonelyauthor"),
+        );
       }
     } catch (err) {
       formStatus.classList.add("error");
