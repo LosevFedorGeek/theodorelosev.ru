@@ -317,7 +317,7 @@ const translations = {
     proj_4_desc:
       "Дипломный проект. Полноценная 2D top-down 16-bit RPG на Unity 6. Архитектура игровых циклов на C#, инвентарь, искусственный интеллект NPC и анимации.",
     calc_title: "Kalkulator",
-    calc_subtitle: "Kosten- und Zeitaufwand für Ihr Digitalprojekt.",
+    calc_subtitle: "Kosten- und Zeitaufwand для Ihr Digitalprojekt.",
     calc_label_1: "1. Produktkategorie:",
     type_landing: "Schlüsselfertige Landingpage",
     type_corp: "Unternehmensportal",
@@ -1012,15 +1012,21 @@ function initContactForm() {
     submitBtn.classList.add("loading");
     submitBtn.disabled = true;
 
-    try {
-      const formData = new FormData(form);
-      const actionUrl =
-        form.getAttribute("action") || "https://api.web3forms.com/submit";
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData);
 
-      const response = await fetch(actionUrl, {
+    if (payload.contact && payload.contact.includes("@")) {
+      payload.email = payload.contact.trim();
+    }
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        body: formData,
-        headers: { Accept: "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -1043,10 +1049,26 @@ function initContactForm() {
         );
       }
     } catch (err) {
+      const isNetworkOrBlocked =
+        err.name === "TypeError" &&
+        (err.message === "Failed to fetch" ||
+          err.message.includes("fetch") ||
+          err.message.includes("NetworkError"));
+
       formStatus.classList.add("error");
-      formStatus.textContent =
-        err.message ||
-        "Ошибка соединения. Напишите напрямую на почту: losevfedor287@gmail.com или в Telegram @lonelyauthor";
+
+      if (isNetworkOrBlocked) {
+        formStatus.textContent =
+          currentLang === "en"
+            ? "Network request was blocked by an ad blocker or privacy extension. Please disable AdBlock or contact me via Telegram: @lonelyauthor"
+            : currentLang === "de"
+              ? "Die Anfrage wurde durch einen Werbeblocker blockiert. Bitte deaktivieren Sie AdBlock oder schreiben Sie mir auf Telegram: @lonelyauthor"
+              : "Запрос заблокирован расширением браузера (AdBlock / Shield). Отключите блокировщик рекламы для отправки или напишите напрямую в Telegram: @lonelyauthor";
+      } else {
+        formStatus.textContent =
+          err.message ||
+          "Ошибка соединения. Напишите напрямую на почту: losevfedor287@gmail.com или в Telegram @lonelyauthor";
+      }
     } finally {
       submitBtn.classList.remove("loading");
       submitBtn.disabled = false;
